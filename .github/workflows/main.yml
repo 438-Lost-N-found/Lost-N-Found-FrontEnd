@@ -11,6 +11,10 @@ jobs:
   website-runs:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: NatApp
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,31 +23,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: NatApp/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: NatApp
 
       - name: Start Expo website
         run: |
           npx expo start --web --localhost --port 8081 > expo.log 2>&1 &
           echo $! > expo.pid
-        working-directory: NatApp
 
-      - name: Check website is available
+      - name: Check website is running
         run: |
-          if ! curl --fail \
+          curl --fail \
             --retry 30 \
             --retry-delay 2 \
             --retry-connrefused \
-            http://127.0.0.1:8081/; then
-            cat NatApp/expo.log
-            exit 1
-          fi
+            http://127.0.0.1:8081/
 
-      - name: Stop Expo server
+      - name: Stop Expo website
         if: always()
         run: kill "$(cat expo.pid)" || true
-        working-directory: NatApp
