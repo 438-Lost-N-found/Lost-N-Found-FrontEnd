@@ -17,14 +17,17 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: NatApp/package-lock.json
 
       - name: Install dependencies
         run: npm ci
+        working-directory: NatApp
 
       - name: Start Expo website
         run: |
           npx expo start --web --localhost --port 8081 > expo.log 2>&1 &
           echo $! > expo.pid
+        working-directory: NatApp
 
       - name: Check website is available
         run: |
@@ -33,10 +36,11 @@ jobs:
             --retry-delay 2 \
             --retry-connrefused \
             http://127.0.0.1:8081/; then
-            cat expo.log
+            cat NatApp/expo.log
             exit 1
           fi
 
       - name: Stop Expo server
         if: always()
         run: kill "$(cat expo.pid)" || true
+        working-directory: NatApp
