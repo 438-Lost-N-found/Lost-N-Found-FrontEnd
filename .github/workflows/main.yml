@@ -1,0 +1,45 @@
+name: Website Run
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  website-runs:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: NatApp
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start Expo website
+        run: |
+          npx expo start --web --localhost --port 8081 > expo.log 2>&1 &
+          echo $! > expo.pid
+
+      - name: Check website is running
+        run: |
+          curl --fail \
+            --retry 30 \
+            --retry-delay 2 \
+            --retry-connrefused \
+            http://127.0.0.1:8081/
+
+      - name: Stop Expo website
+        if: always()
+        run: kill "$(cat expo.pid)" || true
