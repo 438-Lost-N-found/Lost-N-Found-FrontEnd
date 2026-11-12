@@ -23,11 +23,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-<<<<<<< HEAD
-=======
-          cache: npm
-          cache-dependency-path: NatApp/package-lock.json
->>>>>>> 4fef091 (node attemp fix 1)
 
       - name: Install dependencies
         run: npm ci
