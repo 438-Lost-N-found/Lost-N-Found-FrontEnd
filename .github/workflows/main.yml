@@ -1,3 +1,4 @@
+
 name: Website Run
 
 on:
@@ -23,23 +24,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+          cache-dependency-path: NatApp/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Start Expo website
-        run: |
-          npx expo start --web --localhost --port 8081 > expo.log 2>&1 &
-          echo $! > expo.pid
+      - name: Run unit tests
+        run: npm test -- --runInBand
 
-      - name: Check website is running
-        run: |
-          curl --fail \
-            --retry 30 \
-            --retry-delay 2 \
-            --retry-connrefused \
-            http://127.0.0.1:8081/
-
-      - name: Stop Expo website
-        if: always()
-        run: kill "$(cat expo.pid)" || true
+      - name: Build Expo website
+        run: npx expo export --platform web

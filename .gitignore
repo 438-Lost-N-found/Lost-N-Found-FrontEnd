@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Expo
+.expo/
+**/.expo/
+dist/
+web-build/
+
+# Environment files
+.env
+.env.*
+
+# Generated files
+*.tsbuildinfo
