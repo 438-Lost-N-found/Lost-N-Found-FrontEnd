@@ -20,6 +20,12 @@ export default function RootLayout() {
       />
 
       <Stack.Screen
+        name= "CreateAccount"
+        options={{title: "Create Account" }}
+      />
+
+
+      <Stack.Screen
         name="homepage"
         options={{ title: "Lost and Found" }}
       />
