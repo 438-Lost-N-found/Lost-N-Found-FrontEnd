@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { globalStyles } from "../constants/styles";
+import ContactOwnerForm from '../components/ContactOwnerForm';
 
 export default function ItemDetails() {
   const { itemId } = useLocalSearchParams();
@@ -36,27 +37,7 @@ export default function ItemDetails() {
       <Text style={globalStyles.detailText}>
         Item number: {itemId}
       </Text>
-
-      <Text style={globalStyles.chatTitle}>
-        Contact about this item
-      </Text>
-
-      <View style={globalStyles.chatBox}>
-        <Text style={globalStyles.chatMessage}>
-          Hello, I have information of this item.
-        </Text>
-      </View>
-
-      <TextInput
-        style={globalStyles.messageInput}
-        placeholder="Type a message..."
-        value={message}
-        onChangeText={setMessage}
-      />
-
-      <Pressable style={globalStyles.sendButton}>
-        <Text style={globalStyles.sendButtonText}>Send</Text>
-      </Pressable>
+      <ContactOwnerForm postId={String(itemId)} />
     </ScrollView>
   );
 }
